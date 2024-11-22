@@ -20,13 +20,24 @@ pipeline {
 		}
 		stage('Test') {
 			steps {
-				echo "Build"
+				echo "Test"
 			}
 		}
 		stage('Integration Test') {
 			steps {
 				echo "Integration Test"
 			}
+		}
+	} 
+	post {
+		always {
+			echo "Runs always"
+		}
+		success {
+			echo "Runs when successful"
+		}
+		failure {
+			echo "Runs on failure"
 		}
 	}
 }
