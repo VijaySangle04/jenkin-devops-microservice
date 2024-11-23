@@ -35,11 +35,11 @@ pipeline {
 				sh 'mvn clean compile'
 			}
 		}
-		stage('Package' {
+		stage('Package') {
 			steps {
 				sh "mvn package -DskipTests"
 			}
-		})
+		}
 		// stage('Test') {
 		// 	steps {
 		// 		echo "Test"
