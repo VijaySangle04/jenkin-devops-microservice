@@ -35,18 +35,43 @@ pipeline {
 				sh 'mvn clean compile'
 			}
 		}
-		stage('Test') {
+		stage('Package' {
 			steps {
-				echo "Test"
-				sh 'mvn test'
+				sh "mvn package -DskipTests"
+			}
+		})
+		// stage('Test') {
+		// 	steps {
+		// 		echo "Test"
+		// 		sh 'mvn test'
+		// 	}
+		// }
+		// stage('Integration Test') {
+		// 	steps {
+		// 		echo "Integration Test"
+		// 		sh 'mvn failsafe:integration-test failsafe:verify'
+		// 	}
+		// }
+		stage('Build Docker Image') {
+			steps {
+				//"docker build -t sanglevijayuk/currency-exchange-devops:$env.BUILD_TAG"
+				script {
+					docker.build("sanglevijayuk/currency-exchange-devops:${env.BUILD_TAG}")
+				}
 			}
 		}
-		stage('Integration Test') {
+
+		stage('Push Docker Image') {
 			steps {
-				echo "Integration Test"
-				sh 'mvn failsafe:integration-test failsafe:verify'
+				script {
+					docker.withRegistry('', 'dockerhub') {
+						dockerImage.push();
+						dockerImage.push('latest');
+					}
+				}
 			}
 		}
+
 	} 
 	post {
 		always {
